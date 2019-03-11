@@ -1,0 +1,13 @@
+FROM node:carbon
+WORKDIR /usr/src/pdp_nest_api
+COPY ./package*.json ./
+RUN npm install
+RUN apt-get update
+RUN npm install pm2 -g
+#RUN npm install ts-node -g
+#RUN pm2 install ts-node
+RUN pm2 install typescript
+RUN apt-get install htop
+RUN apt-get install nano
+COPY ./ .
+EXPOSE 3030

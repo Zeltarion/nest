@@ -1,0 +1,63 @@
+version: "3"
+
+volumes:
+  node_modules:
+
+services:
+  web:
+    container_name: pdp_nest_api
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.api.local
+    command: bash -c "npm i && npm run start"
+    #command: bash -c "npm run pm2-start"
+    #command: bash -c "pm2-runtime src/main.ts"
+    ports:
+      - "3030:3030"
+      - "3000:3000"
+      - "9229:9229"
+    environment:
+      - NODE_ENV=$NODE_ENV
+      - PORT=$PORT
+      - DB_HOST=$DB_HOST
+      - DB_PORT=$DB_PORT
+      - DB_USER=$DB_USER
+      - DB_PASSWORD=$DB_PASSWORD
+      - DB_NAME=$DB_NAME
+      - JWT_SECRET=$JWT_SECRET
+      - JWT_EXPIRES=$JWT_EXPIRES
+    volumes:
+        - .:/usr/src/pdp_nest_api/
+        - node_modules:/usr/src/pdp_nest_api/node_modules
+    networks:
+      - backend
+    depends_on:
+      #- mongodb
+      - postgredb
+#  mongodb:
+#    container_name: pdp_nest_mongo
+#    image: library/mongo:3.4
+#    volumes:
+#      - ./volumes/mongodb:/data/db
+#    ports:
+#      - "27017:27017"
+#    networks:
+#      - backend
+
+  postgredb:
+    container_name: pdp_nest_postgres
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.db
+    volumes:
+      - ./volumes/postgres:/srv/docker/postgresql
+      - ./volumes/postgres/data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+    expose:
+      - 5432
+
+networks:
+  backend:
