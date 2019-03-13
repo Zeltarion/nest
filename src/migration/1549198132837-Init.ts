@@ -106,7 +106,14 @@ export class Init1549198132837 implements MigrationInterface {
             columnNames: ['user_id'],
             referencedTableName: 'users',
             referencedColumnNames: ['id'],
-            onDelete: 'SET NULL',
+            onDelete: 'CASCADE',
+          },
+          {
+            name: 'usersBoards_boardId_seq',
+            columnNames: ['board_id'],
+            referencedTableName: 'boards',
+            referencedColumnNames: ['id'],
+            onDelete: 'CASCADE',
           },
         ],
         engine: 'InnoDB',
@@ -141,6 +148,10 @@ export class Init1549198132837 implements MigrationInterface {
             name: 'user_id',
             type: 'int',
           },
+          {
+            name: 'board_id',
+            type: 'int',
+          },
         ],
         foreignKeys: [
           {
@@ -156,6 +167,13 @@ export class Init1549198132837 implements MigrationInterface {
             referencedTableName: 'users',
             referencedColumnNames: ['id'],
             onDelete: 'SET NULL',
+          },
+          {
+            name: 'tasks_boardId_seq',
+            columnNames: ['board_id'],
+            referencedTableName: 'boards',
+            referencedColumnNames: ['id'],
+            onDelete: 'CASCADE',
           },
         ],
         engine: 'InnoDB',
@@ -198,7 +216,7 @@ export class Init1549198132837 implements MigrationInterface {
             columnNames: ['task_id'],
             referencedTableName: 'tasks',
             referencedColumnNames: ['id'],
-            onDelete: 'SET NULL',
+            onDelete: 'CASCADE',
           },
           {
             name: 'comments_userId_seq',
