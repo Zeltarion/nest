@@ -1,11 +1,11 @@
 import { Entity, Column, JoinColumn, ManyToOne, ManyToMany, OneToMany, JoinTable } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { BaseEntity } from '../common/entity/base.entity';
-import { Tasks } from '../tasks/tasks.entity';
-import { TaskComments } from '../task_comments/task_comments.entity';
-import { Boards } from '../boards/boards.entity';
+import { Task } from '../task/task.entity';
+import { TaskComment } from '../taskComment/taskComment.entity';
+import { Board } from '../board/board.entity';
 
-@Entity({ name: 'users' })
+@Entity({ name: 'user' })
 export class User extends BaseEntity {
 
   @Column({ length: 255, select: false, nullable: true })
@@ -18,10 +18,10 @@ export class User extends BaseEntity {
   @Column({ unique: true, length: 255 })
   name: string;
 
-  @Column({ length: 255, nullable: true, name: 'first_name' })
+  @Column({ length: 255, nullable: true, name: 'firstName' })
   firstName: string;
 
-  @Column({ length: 255, nullable: true, name: 'last_name' })
+  @Column({ length: 255, nullable: true, name: 'lastName' })
   lastName: string;
 
   @Column({ length: 45, unique: true, nullable: true })
@@ -30,21 +30,21 @@ export class User extends BaseEntity {
   @Column({ length: 255, nullable: true })
   photo: string;
 
-  @OneToMany(type => Tasks, task => task.user)
-  @JoinTable({name: 'user_id'})
-  tasks: Tasks[];
+  @OneToMany(type => Task, task => task.user)
+  @JoinTable({name: 'userId'})
+  tasks: Task[];
 
-  @OneToMany(type => Tasks, task => task.user)
-  @JoinTable({name: 'owner_id'})
-  ownerTasks: Tasks[];
+  @OneToMany(type => Task, task => task.user)
+  @JoinTable({name: 'ownerId'})
+  ownerTasks: Task[];
 
-  @OneToMany(type => TaskComments, taskComment => taskComment.user)
-  @JoinTable({name: 'user_id'})
-  taskComments: TaskComments[];
+  @OneToMany(type => TaskComment, taskComment => taskComment.user)
+  @JoinTable({name: 'userId'})
+  taskComments: TaskComment[];
 
-  @ManyToMany(type => Boards, board => board.users)
-  @JoinTable({name: 'users_boards'})
-  boards: Boards[];
+  @ManyToMany(type => Board, board => board.users)
+  @JoinTable({name: 'userBoard'})
+  boards?: Board[];
 
   constructor(partial: Partial<User>) {
     super();

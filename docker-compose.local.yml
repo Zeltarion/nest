@@ -10,12 +10,11 @@ services:
       context: .
       dockerfile: ./docker/Dockerfile.api.local
     command: bash -c "npm i && npm run start"
+    restart: always
     #command: bash -c "npm run pm2-start"
     #command: bash -c "pm2-runtime src/main.ts"
     ports:
       - "3030:3030"
-      - "3000:3000"
-      - "9229:9229"
     environment:
       - NODE_ENV=$NODE_ENV
       - PORT=$PORT
@@ -28,7 +27,6 @@ services:
       - JWT_EXPIRES=$JWT_EXPIRES
     volumes:
         - .:/usr/src/pdp_nest_api/
-        - node_modules:/usr/src/pdp_nest_api/node_modules
     networks:
       - backend
     depends_on:

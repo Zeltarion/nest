@@ -4,7 +4,7 @@ export class Init1549198132837 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<any> {
       await queryRunner.createTable(new Table({
-        name: 'users',
+        name: 'user',
         columns: [
           {
             name: 'id',
@@ -26,13 +26,13 @@ export class Init1549198132837 implements MigrationInterface {
             isUnique: true,
           },
           {
-            name: 'first_name',
+            name: 'firstName',
             type: 'varchar',
             length: '255',
             default: `''`,
           },
           {
-            name: 'last_name',
+            name: 'lastName',
             type: 'varchar',
             length: '255',
             default: `''`,
@@ -53,17 +53,17 @@ export class Init1549198132837 implements MigrationInterface {
         engine: 'InnoDB',
       }), true);
 
-      await queryRunner.query(`ALTER TABLE users
+      await queryRunner.query(`ALTER TABLE "user"
         ADD COLUMN "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         ADD COLUMN "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP`);
 
-      await queryRunner.createIndex('users', new TableIndex({
-        name: 'users_fname_sname_idx',
-        columnNames: ['first_name', 'last_name'],
+      await queryRunner.createIndex('user', new TableIndex({
+        name: 'user_fname_sname_idx',
+        columnNames: ['firstName', 'lastName'],
       }));
 
       await queryRunner.createTable(new Table({
-        name: 'boards',
+        name: 'board',
         columns: [
           {
             name: 'id',
@@ -78,12 +78,12 @@ export class Init1549198132837 implements MigrationInterface {
         ],
       }), true);
 
-      await queryRunner.query(`ALTER TABLE boards
+      await queryRunner.query(`ALTER TABLE "board"
         ADD COLUMN "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         ADD COLUMN "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP`);
 
       await queryRunner.createTable(new Table({
-        name: 'users_boards',
+        name: 'userBoard',
         columns: [
           {
             name: 'id',
@@ -92,26 +92,26 @@ export class Init1549198132837 implements MigrationInterface {
             isPrimary: true,
           },
           {
-            name: 'board_id',
+            name: 'boardId',
             type: 'int',
           },
           {
-            name: 'user_id',
+            name: 'userId',
             type: 'int',
           },
         ],
         foreignKeys: [
           {
-            name: 'usersBoards_userId_seq',
-            columnNames: ['user_id'],
-            referencedTableName: 'users',
+            name: 'userBoard_userId_seq',
+            columnNames: ['userId'],
+            referencedTableName: 'user',
             referencedColumnNames: ['id'],
             onDelete: 'CASCADE',
           },
           {
-            name: 'usersBoards_boardId_seq',
-            columnNames: ['board_id'],
-            referencedTableName: 'boards',
+            name: 'userBoard_boardId_seq',
+            columnNames: ['boardId'],
+            referencedTableName: 'board',
             referencedColumnNames: ['id'],
             onDelete: 'CASCADE',
           },
@@ -119,12 +119,12 @@ export class Init1549198132837 implements MigrationInterface {
         engine: 'InnoDB',
       }), true);
 
-      await queryRunner.query(`ALTER TABLE users_boards
+      await queryRunner.query(`ALTER TABLE "userBoard"
         ADD COLUMN "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         ADD COLUMN "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP`);
 
       await queryRunner.createTable(new Table({
-        name: 'tasks',
+        name: 'task',
         columns: [
           {
             name: 'id',
@@ -141,37 +141,37 @@ export class Init1549198132837 implements MigrationInterface {
             type: 'boolean',
           },
           {
-            name: 'owner_id',
+            name: 'ownerId',
             type: 'int',
           },
           {
-            name: 'user_id',
+            name: 'userId',
             type: 'int',
           },
           {
-            name: 'board_id',
+            name: 'boardId',
             type: 'int',
           },
         ],
         foreignKeys: [
           {
-            name: 'tasks_ownerId_seq',
-            columnNames: ['owner_id'],
-            referencedTableName: 'users',
+            name: 'task_ownerId_seq',
+            columnNames: ['ownerId'],
+            referencedTableName: 'user',
             referencedColumnNames: ['id'],
             onDelete: 'SET NULL',
           },
           {
-            name: 'tasks_userId_seq',
-            columnNames: ['user_id'],
-            referencedTableName: 'users',
+            name: 'task_userId_seq',
+            columnNames: ['userId'],
+            referencedTableName: 'user',
             referencedColumnNames: ['id'],
             onDelete: 'SET NULL',
           },
           {
-            name: 'tasks_boardId_seq',
-            columnNames: ['board_id'],
-            referencedTableName: 'boards',
+            name: 'task_boardId_seq',
+            columnNames: ['boardId'],
+            referencedTableName: 'board',
             referencedColumnNames: ['id'],
             onDelete: 'CASCADE',
           },
@@ -179,12 +179,12 @@ export class Init1549198132837 implements MigrationInterface {
         engine: 'InnoDB',
       }), true);
 
-      await queryRunner.query(`ALTER TABLE tasks
+      await queryRunner.query(`ALTER TABLE "task"
         ADD COLUMN "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         ADD COLUMN "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP`);
 
       await queryRunner.createTable(new Table({
-        name: 'task_comments',
+        name: 'taskComment',
         columns: [
           {
             name: 'id',
@@ -193,11 +193,11 @@ export class Init1549198132837 implements MigrationInterface {
             isPrimary: true,
           },
           {
-            name: 'task_id',
+            name: 'taskId',
             type: 'int',
           },
           {
-            name: 'user_id',
+            name: 'userId',
             type: 'int',
           },
           {
@@ -212,16 +212,16 @@ export class Init1549198132837 implements MigrationInterface {
         ],
         foreignKeys: [
           {
-            name: 'taskComments_taskId_seq',
-            columnNames: ['task_id'],
-            referencedTableName: 'tasks',
+            name: 'taskComment_taskId_seq',
+            columnNames: ['taskId'],
+            referencedTableName: 'task',
             referencedColumnNames: ['id'],
             onDelete: 'CASCADE',
           },
           {
-            name: 'comments_userId_seq',
-            columnNames: ['user_id'],
-            referencedTableName: 'users',
+            name: 'comment_userId_seq',
+            columnNames: ['userId'],
+            referencedTableName: 'user',
             referencedColumnNames: ['id'],
             onDelete: 'SET NULL',
           },
@@ -229,23 +229,23 @@ export class Init1549198132837 implements MigrationInterface {
         engine: 'InnoDB',
       }), true);
 
-      await queryRunner.query(`ALTER TABLE task_comments
+      await queryRunner.query(`ALTER TABLE "taskComment"
         ADD COLUMN "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         ADD COLUMN "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {
-      await queryRunner.dropForeignKey('task_comments', 'taskComments_taskId_seq');
-      await queryRunner.dropForeignKey('task_comments', 'comments_userId_seq');
-      await queryRunner.dropForeignKey('tasks', 'tasks_ownerId_seq');
-      await queryRunner.dropForeignKey('tasks', 'tasks_userId_seq');
-      await queryRunner.dropForeignKey('users_boards', 'usersBoards_userId_seq');
+      await queryRunner.dropForeignKey('taskComment', 'taskComment_taskId_seq');
+      await queryRunner.dropForeignKey('taskComment', 'comment_userId_seq');
+      await queryRunner.dropForeignKey('task', 'task_ownerId_seq');
+      await queryRunner.dropForeignKey('task', 'task_userId_seq');
+      await queryRunner.dropForeignKey('userBoard', 'userBoard_userId_seq');
 
-      await queryRunner.dropTable('task_comments');
-      await queryRunner.dropTable('tasks');
-      await queryRunner.dropTable('users_boards');
-      await queryRunner.dropTable('boards');
-      await queryRunner.dropTable('users');
+      await queryRunner.dropTable('taskComment');
+      await queryRunner.dropTable('task');
+      await queryRunner.dropTable('userBoard');
+      await queryRunner.dropTable('board');
+      await queryRunner.dropTable('user');
     }
 
 }

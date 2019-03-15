@@ -2,10 +2,9 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CatsController } from './cats/cats.controller';
-import { CatsService } from './cats/cats.service';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { BoardModule } from './board/board.module';
 import { ORM_CONFIG } from './config';
 import { Routes, RouterModule } from 'nest-router';
 
@@ -21,6 +20,10 @@ const routes: Routes = [
         path: '/auth',
         module: AuthModule,
       },
+      {
+        path: '/board',
+        module: BoardModule,
+      },
     ],
   },
 ];
@@ -31,8 +34,9 @@ const routes: Routes = [
     RouterModule.forRoutes(routes),
     AuthModule,
     UserModule,
+    BoardModule,
   ],
-  controllers: [AppController, CatsController],
-  providers: [AppService, CatsService],
+  controllers: [AppController],
+  providers: [],
 })
 export class AppModule {}
