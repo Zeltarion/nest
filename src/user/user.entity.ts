@@ -28,7 +28,7 @@ export class User extends BaseEntity {
   phone: string;
 
   @Column({ length: 255, nullable: true })
-  photo: string;
+  avatar: string;
 
   @OneToMany(type => Task, task => task.user)
   @JoinTable({name: 'userId'})
@@ -38,12 +38,22 @@ export class User extends BaseEntity {
   @JoinTable({name: 'ownerId'})
   ownerTasks: Task[];
 
-  @OneToMany(type => TaskComment, taskComment => taskComment.user)
+  @OneToMany(type => TaskComment,   taskComment => taskComment.user)
   @JoinTable({name: 'userId'})
   taskComments: TaskComment[];
 
   @ManyToMany(type => Board, board => board.users)
-  @JoinTable({name: 'userBoard'})
+  @JoinTable({
+    name: 'userBoard', // table name for the junction table of this relation
+    joinColumn: {
+      name: 'userId',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'boardId',
+      referencedColumnName: 'id',
+    },
+  })
   boards?: Board[];
 
   constructor(partial: Partial<User>) {

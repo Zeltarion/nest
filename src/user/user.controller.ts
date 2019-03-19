@@ -2,6 +2,7 @@ import {
   Get,
   Controller,
   Post,
+  Patch,
   UseGuards,
   Body,
   Param,
@@ -24,7 +25,10 @@ import { AuthGuard } from '@nestjs/passport';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-// import { UpdateUserDto } from './dto/update-user.dto';
+import { FileService } from '../core/file.service';
+import { UploadFileDto } from '../common/dto/uploadfile.dto';
+import { FileLinkDto } from '../common/dto/filelink.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 // import { FilterUserDto } from './dto/filter-user.dto';
 // import { ResponseUserDto } from './dto/response-fetch-all-user.dto';
 // import { ResponseUserInfoDto } from './dto/response-user.dto';
@@ -35,7 +39,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 export class UserController {
 
   constructor(
-    private readonly userService: UserService) {
+    private readonly userService: UserService,
+    private readonly fileService: FileService) {
   }
 
   // @Get()
@@ -53,16 +58,6 @@ export class UserController {
     const { id } = req.user;
     return this.userService.findById(id);
   }
-  //
-  // @Get('/email')
-  // @UseGuards(AuthGuard('jwt'))
-  // @ApiBearerAuth()
-  // @ApiOperation({ title: 'Get user by email' })
-  // @ApiResponse({ status: 200, type: ResponseUserInfoDto })
-  // async fetchUserByEmail(@Query('email') email: string): Promise<User> {
-  //   return this.userService.findByEmail(email);
-  // }
-  //
   // @Get('/:id')
   // @UseGuards(AuthGuard('jwt'))
   // @ApiBearerAuth()
@@ -81,24 +76,43 @@ export class UserController {
     return this.userService.create(userDto, origin);
   }
 
-  // @Put('/:id')
-  // @UseGuards(AuthGuard('jwt'))
-  // @ApiBearerAuth()
-  // @ApiOperation({ title: 'Update an existing user' })
-  // @ApiResponse({ status: 200, type: ResponseUserInfoDto })
-  // async update(@Body() userDto: UpdateUserDto, @Param('id') userId: number): Promise<User> {
-  //   const user = await this.userService.findById(userId);
-  //   if (!user) { throw new HttpException('Can\'t find user with this id', HttpStatus.BAD_REQUEST); }
-  //   return this.userService.update(userDto);
-  // }
-  //
-  // @Delete('/:id')
-  // @HttpCode(204)
-  // @UseGuards(AuthGuard('jwt'))
-  // @ApiBearerAuth()
-  // @ApiOperation({ title: 'Delete user' })
-  // @ApiResponse({ status: 204, description: 'Successfully deleted user' })
-  // async remove(@Param('id') userId: number): Promise<any> {
-  //   return this.userService.remove(userId);
-  // }
+  @Post('/avatar')
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile(@UploadedFile() file: UploadFileDto, @Req() req): Promise<FileLinkDto> {
+    const userId = req.user.id;
+    if (!file.mimetype) {
+      throw new HttpException('Can\'t upload file with undefined format', HttpStatus.BAD_REQUEST);
+    }
+    if (!userId) {
+      throw new HttpException('UserId is undefined!', HttpStatus.BAD_REQUEST);
+    }
+
+    const user = await this.userService.findById(userId);
+    if (!user) {
+      throw new HttpException('Can\'t find user with this id', HttpStatus.BAD_REQUEST);
+    }
+    const filename = await this.fileService.uploadFile(file);
+    if (!filename) {
+      throw new HttpException('Can\'t upload file on S3', HttpStatus.BAD_REQUEST);
+    }
+
+    const userAvatarData = await this.userService.updateUserAvatar({ userId, filename });
+    await this.fileService.removeByKey(user.avatar);
+    return userAvatarData;
+  }
+
+  @Patch('')
+  @UseGuards(AuthGuard('jwt'))
+  async update(@Body() userDto: UpdateUserDto, @Req() req): Promise<User> {
+    const { id } = req.user;
+    return this.userService.update(id, userDto);
+  }
+
+  @Delete('/avatar')
+  @UseGuards(AuthGuard('jwt'))
+  async removeAvatar(@Req() req): Promise<User> {
+    const { id } = req.user;
+    return this.userService.removeAvatar(id);
+  }
 }

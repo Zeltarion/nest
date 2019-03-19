@@ -27,7 +27,7 @@ export class Task extends BaseEntity {
   taskComments: TaskComment[];
 
   @ManyToOne(type => Board, board => board.tasks)
-  @JoinColumn({ name: 'ownerId' })
+  @JoinColumn({ name: 'boardId' })
   board: Board;
 
   constructor(partial: Partial<Task>) {

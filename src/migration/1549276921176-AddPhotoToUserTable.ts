@@ -1,10 +1,10 @@
 import {MigrationInterface, QueryRunner, TableColumn} from 'typeorm';
 
-export class AddPhotoToUserTable1549276921176 implements MigrationInterface {
+export class AddAvatarToUserTable1549276921176 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<any> {
       await queryRunner.addColumn('user', new TableColumn({
-        name: 'photo',
+        name: 'avatar',
         type: 'varchar',
         length: '100',
         isNullable: true,
@@ -12,7 +12,7 @@ export class AddPhotoToUserTable1549276921176 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {
-      await queryRunner.dropColumn('user', 'photo');
+      await queryRunner.dropColumn('user', 'avatar');
     }
 
 }
