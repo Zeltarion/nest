@@ -22,6 +22,12 @@ const {
 } = process.env;
 import { ORM_CONFIG } from './orm.config';
 
+import { APP_CONFIG } from './app.config';
+
+const {
+  DEFAULT_STATUS_ID,
+} = APP_CONFIG;
+
 export {
   HOST,
   PORT,
@@ -41,4 +47,5 @@ export {
   AWS_S3_BUCKET_NAME,
   KEY,
   FILE_STORAGE_PATH,
-};
+  DEFAULT_STATUS_ID,
+}

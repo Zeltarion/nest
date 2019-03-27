@@ -3,7 +3,7 @@ import { BaseEntity } from '../common/entity/base.entity';
 import { User } from '../user/user.entity';
 import { Task } from '../task/task.entity';
 
-@Entity({ name: 'taskComment' })
+@Entity({ name: 'task-comment' })
 export class TaskComment extends BaseEntity {
 
   @Column({ length: 255, nullable: true, name: 'title' })

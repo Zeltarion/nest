@@ -22,5 +22,20 @@ module.exports = [
     "cli": {
       "migrationsDir": "src/migration",
     }
+  },
+  {
+    "type": "postgres",
+    "name": "seed",
+    "host": DB_HOST,
+    "port": DB_PORT,
+    "username": DB_USER,
+    "password": DB_PASSWORD,
+    "database": DB_NAME,
+    "migrations": [
+      "src/seeds/*.ts"
+    ],
+    "cli": {
+      "migrationsDir": "src/seeds",
+    }
   }
 ];

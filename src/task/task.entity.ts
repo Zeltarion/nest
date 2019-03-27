@@ -1,9 +1,10 @@
-import { Entity, Column, JoinColumn, ManyToOne, ManyToMany, OneToMany, JoinTable } from 'typeorm';
+import { Entity, Column, JoinColumn, ManyToOne, OneToMany, OneToOne } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { BaseEntity } from '../common/entity/base.entity';
 import { User } from '../user/user.entity';
-import { TaskComment } from '../taskComment/taskComment.entity';
+import { TaskComment } from '../task-comment/task-comment.entity';
 import { Board } from '../board/board.entity';
+import { TaskStatus } from '../task-status/task-status.entity';
 
 @Entity({ name: 'task' })
 export class Task extends BaseEntity {
@@ -12,7 +13,14 @@ export class Task extends BaseEntity {
   name: string;
 
   @Column({})
-  status: boolean;
+  description: string;
+
+  @Column({})
+  boardId: number;
+
+  @OneToOne(type => TaskStatus, taskStatus => taskStatus.task)
+  @JoinColumn({ name: 'statusId' })
+  taskStatus: TaskStatus;
 
   @ManyToOne(type => User, user => user.tasks)
   @JoinColumn({ name: 'userId' })

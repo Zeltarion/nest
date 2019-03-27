@@ -3,8 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getManager, In } from 'typeorm';
 import { Board } from './board.entity';
 import { User } from '../user/user.entity';
+// import { Task } from '../task/task.entity';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { FilterBoardDto } from './dto/filter-board.dto';
+// import { FilterTaskDto } from '../task/dto/filter-task.dto';
 import { QueryOrder } from '../common/enums/query-order.enum';
 
 const relations = [
@@ -22,7 +24,8 @@ export class BoardService {
 
   async findAll(query: FilterBoardDto): Promise<any> {
     const { count, page, orderType = QueryOrder.DESC, orderBy } = query;
-    let skip, sqlQuery;
+    let skip: number;
+    let sqlQuery: any;
     const sqlQueryCount = getManager().createQueryBuilder().select('board').from(Board, 'board');
     const allBoards = await sqlQueryCount.getCount();
 
@@ -58,10 +61,8 @@ export class BoardService {
     };
   }
 
-  async findById(id: number | string): Promise<Board | {}> {
-    // return this.boardRepository.findOne(id, { relations });
-    const board = await this.boardRepository.findOne(id, { relations });
-    return board || {};
+  async findById(id: number | string): Promise<Board> {
+    return this.boardRepository.findOne(id, { relations });
   }
 
   /**

@@ -2,7 +2,7 @@ import { Entity, Column, JoinColumn, ManyToOne, ManyToMany, OneToMany, JoinTable
 import { Exclude } from 'class-transformer';
 import { BaseEntity } from '../common/entity/base.entity';
 import { Task } from '../task/task.entity';
-import { TaskComment } from '../taskComment/taskComment.entity';
+import { TaskComment } from '../task-comment/task-comment.entity';
 import { Board } from '../board/board.entity';
 
 @Entity({ name: 'user' })

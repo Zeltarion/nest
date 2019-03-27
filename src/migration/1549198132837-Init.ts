@@ -184,7 +184,7 @@ export class Init1549198132837 implements MigrationInterface {
         ADD COLUMN "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP`);
 
       await queryRunner.createTable(new Table({
-        name: 'taskComment',
+        name: 'task-comment',
         columns: [
           {
             name: 'id',
@@ -219,7 +219,7 @@ export class Init1549198132837 implements MigrationInterface {
             onDelete: 'CASCADE',
           },
           {
-            name: 'comment_userId_seq',
+            name: 'taskComment_userId_seq',
             columnNames: ['userId'],
             referencedTableName: 'user',
             referencedColumnNames: ['id'],
@@ -235,13 +235,13 @@ export class Init1549198132837 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {
-      await queryRunner.dropForeignKey('taskComment', 'taskComment_taskId_seq');
-      await queryRunner.dropForeignKey('taskComment', 'comment_userId_seq');
+      await queryRunner.dropForeignKey('task-comment', 'taskComment_taskId_seq');
+      await queryRunner.dropForeignKey('task-comment', 'taskComment_userId_seq');
       await queryRunner.dropForeignKey('task', 'task_ownerId_seq');
       await queryRunner.dropForeignKey('task', 'task_userId_seq');
       await queryRunner.dropForeignKey('userBoard', 'userBoard_userId_seq');
 
-      await queryRunner.dropTable('taskComment');
+      await queryRunner.dropTable('task-comment');
       await queryRunner.dropTable('task');
       await queryRunner.dropTable('userBoard');
       await queryRunner.dropTable('board');

@@ -5,8 +5,10 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { BoardModule } from './board/board.module';
+import { TaskModule } from './task/task.module';
 import { ORM_CONFIG } from './config';
 import { Routes, RouterModule } from 'nest-router';
+import { TaskStatusModule } from './task-status/task-status.module';
 
 const routes: Routes = [
   {
@@ -24,6 +26,10 @@ const routes: Routes = [
         path: '/board',
         module: BoardModule,
       },
+      {
+        path: '/task',
+        module: TaskModule,
+      },
     ],
   },
 ];
@@ -35,6 +41,8 @@ const routes: Routes = [
     AuthModule,
     UserModule,
     BoardModule,
+    TaskModule,
+    TaskStatusModule,
   ],
   controllers: [AppController],
   providers: [],

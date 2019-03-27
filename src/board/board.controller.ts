@@ -23,6 +23,7 @@ import { AuthGuard } from '@nestjs/passport';
 
 import { Board } from './board.entity';
 import { BoardService } from './board.service';
+import { TaskService } from '../task/task.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { FilterBoardDto } from './dto/filter-board.dto';
 
@@ -31,7 +32,8 @@ import { FilterBoardDto } from './dto/filter-board.dto';
 export class BoardController {
 
   constructor(
-    private readonly boardService: BoardService) {
+    private readonly boardService: BoardService,
+    private readonly taskService: TaskService) {
   }
 
   @Get()
@@ -40,11 +42,19 @@ export class BoardController {
     return this.boardService.findAll(query);
   }
 
+  @Get('/:id/task')
+  @UseGuards(AuthGuard('jwt'))
+  async getBoardTasks(@Param() params, @Query() query: FilterBoardDto): Promise<any/*ResponseBoardsDto*/> {
+    const { id } = params;
+    return this.taskService.findBoardTasks(id, query);
+  }
+
   @Get('/:id')
   @UseGuards(AuthGuard('jwt'))
   async get(@Param() params): Promise<Board | {}> {
     const { id } = params;
-    return this.boardService.findById(id);
+    const board = await this.boardService.findById(id);
+    return board || {};
   }
 
   @Post('')
